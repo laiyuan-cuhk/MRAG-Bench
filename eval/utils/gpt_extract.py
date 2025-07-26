@@ -11,9 +11,9 @@ import sys
 import openai
 ## pip install openai==0.28.1 
 
-openai.api_key = "please put your api key here. "
-openai.organization = "please put your organization here."  
-
+openai.api_key = ""
+#openai.organization = "please put your organization here."  
+openai.base_url = "http://localhost:11434/v1"
 
 demo_prompt = """
 Please read the following example. Then extract the multiple choice letter in the answer from the model response and type it at the end of the prompt. You should only output either A, B, C, or D.
@@ -42,7 +42,7 @@ Extracted answer: D
 Explanation: Since this model response is uncertain, the answer should be ferret, which is option D, since the model mentioned it first.
 """
 
-def get_chat_response(promot, api_key, model="gpt-3.5-turbo", temperature=0, max_tokens=256, n=1, patience=10000000,
+def get_chat_response(promot, api_key, model="deepseek-r1:14b", temperature=0, max_tokens=256, n=1, patience=10000000,
  sleep_time=0):
     messages = [
         {"role": "user", "content": promot},
