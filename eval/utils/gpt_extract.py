@@ -45,7 +45,7 @@ Extracted answer: D
 Explanation: Since this model response is uncertain, the answer should be ferret, which is option D, since the model mentioned it first.
 """
 
-def get_chat_response(promot, api_key=None, model="deepseek-r1:14b", temperature=0, max_tokens=256, n=1, patience=10000000,
+def get_chat_response(promot, api_key=None, model="deepseek-r1:8b", temperature=0, max_tokens=256, n=1, patience=10000000,
  sleep_time=0):
     messages = [
         {"role": "user", "content": promot},
