@@ -50,9 +50,15 @@ if __name__ == "__main__":
         out = parse_multi_choice_response(out, ['A', 'B', 'C', 'D'],ans_idx_mapping)
 
         if out not in ['A', 'B', 'C', 'D']:
-            #print(out)
+            print(out)
+
             problem = item['prompt']
             extraction  = extract_answer(item['output'], problem)
+
+            print('------------------------------')
+            print(extraction)
+            print
+
             out = extraction
             item['extracted_output'] = extraction
             need_extra_extract.append(item)

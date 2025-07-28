@@ -7,6 +7,9 @@ from tqdm import tqdm
 
 import sys
 
+#patched
+import re
+
 # OpenAI
 import openai
 ## pip install openai==0.28.1 
@@ -109,7 +112,8 @@ def extract_answer(response, problem, quick_extract=False):
     try:
         full_prompt = create_test_prompt(demo_prompt, query, response)
         extraction = get_chat_response(full_prompt, openai.api_key)
-        return extraction
+        return re.sub(r'<think>.*?</think>', '', extraction, flags=re.DOTALL)
+        #return extraction
     except Exception as e:
         print(e)
 
