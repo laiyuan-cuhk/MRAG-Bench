@@ -61,7 +61,7 @@ if __name__ == "__main__":
             print('------------------------------')
             '''
 
-            out = extraction
+            out = parse_multi_choice_response(extraction, ['A', 'B', 'C', 'D'],ans_idx_mapping)
             item['extracted_output'] = extraction
             need_extra_extract.append(item)
             if out not in ['A', 'B', 'C', 'D']:
