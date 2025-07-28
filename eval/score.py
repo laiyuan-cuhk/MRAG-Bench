@@ -42,7 +42,12 @@ if __name__ == "__main__":
         # if "The choice is" in out:
         #     out = out.split("The choice is")[1].strip()
         ans_idx_mapping = {'a': 0, 'b': 1, 'c': 2, 'd': 3}
-        out = parse_multi_choice_response(out, ['A', 'B', 'C', 'D'],ans_idx_mapping[item['gt_choice'].lower()] )
+        #-------------------
+        # patched: original verison stuck since ans is int. This filter out answer and pass it as dict.
+        gt_choice_key = item['gt_choice'].lower()
+        ans_idx_mapping = {gt_choice_key: item['gt_answer']}
+        #--------------------
+        out = parse_multi_choice_response(out, ['A', 'B', 'C', 'D'],ans_idx_mapping)
 
         if out not in ['A', 'B', 'C', 'D']:
             #print(out)

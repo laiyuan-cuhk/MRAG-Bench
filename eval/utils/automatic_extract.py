@@ -33,6 +33,7 @@ def parse_multi_choice_response(response, all_choices, index2ans):
 
     # if all above doesn't get candidates, check if the content is larger than 5 tokens and try to parse the example
     if len(candidates) == 0 and len(response.split()) > 5:
+        #here is the error that require pacted from score.py
         for index, ans in index2ans.items():
             if ans.lower() in response.lower():
                 candidates.append(index)
