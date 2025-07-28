@@ -55,9 +55,11 @@ if __name__ == "__main__":
             problem = item['prompt']
             extraction  = extract_answer(item['output'], problem)
 
+            '''
             print('------------------------------')
             print(extraction)
-            print
+            print('------------------------------')
+            '''
 
             out = extraction
             item['extracted_output'] = extraction

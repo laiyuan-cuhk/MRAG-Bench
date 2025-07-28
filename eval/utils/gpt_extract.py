@@ -12,11 +12,11 @@ import re
 
 # OpenAI
 import openai
-## pip install openai==0.28.1 
 
-openai.api_key = "no key needed for local server"
-#openai.organization = ""  
-openai.api_base = "http://localhost:11434/v1"
+client = openai.OpenAI(
+    api_key="no key needed for local server",
+    base_url="http://localhost:11434/v1"
+)
 
 demo_prompt = """
 Please read the following example. Then extract the multiple choice letter in the answer from the model response and type it at the end of the prompt. You should only output either A, B, C, or D.
@@ -45,28 +45,32 @@ Extracted answer: D
 Explanation: Since this model response is uncertain, the answer should be ferret, which is option D, since the model mentioned it first.
 """
 
-def get_chat_response(promot, api_key, model="deepseek-r1:1.5b", temperature=0, max_tokens=256, n=1, patience=10000000,
+def get_chat_response(promot, api_key=None, model="deepseek-r1:1.5b", temperature=0, max_tokens=256, n=1, patience=10000000,
  sleep_time=0):
     messages = [
         {"role": "user", "content": promot},
     ]
-    # print("I am here")
     while patience > 0:
         patience -= 1
         try:
-            response = openai.ChatCompletion.create(model=model,
-                                                messages=messages,
-                                                api_key=api_key,
-                                                temperature=temperature,
-                                                max_tokens=max_tokens,
-                                                n=n)
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                n=n
+            )
+            # remove the <think> tag if it exists in all choices
+            for choice in response.choices:
+                choice.message.content = re.sub(r'[\s\S]*?</think>\s*', '', choice.message.content)
+
             if n == 1:
-                prediction = response['choices'][0]['message']['content'].strip()
-                if prediction != "" and prediction != None:
+                prediction = response.choices[0].message.content.strip()
+                if prediction:
                     return prediction
             else:
-                prediction = [choice['message']['content'].strip() for choice in response['choices']]
-                if prediction[0] != "" and prediction[0] != None:
+                prediction = [choice.message.content.strip() for choice in response.choices]
+                if prediction and prediction[0]:
                     return prediction
 
         except Exception as e:
@@ -112,8 +116,7 @@ def extract_answer(response, problem, quick_extract=False):
     try:
         full_prompt = create_test_prompt(demo_prompt, query, response)
         extraction = get_chat_response(full_prompt, openai.api_key)
-        return re.sub(r'<think>.*?</think>', '', extraction, flags=re.DOTALL)
-        #return extraction
+        return extraction
     except Exception as e:
         print(e)
 
